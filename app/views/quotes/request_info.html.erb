@@ -1,0 +1,12 @@
+<p><strong>Ruby version: </strong><%= RUBY_VERSION %></p>
+<p><strong>Rulers version: </strong><%= Rulers::VERSION %></p>
+<p><strong>User agent: </strong><%= env["HTTP_USER_AGENT"] %></p>
+<p><strong>Request time: </strong><%= Time.now %></p>
+<p><strong>Controller: </strong>
+  <%=
+      env["PATH_INFO"].to_s[/\/.*?\//].
+                       gsub("/", "").
+                       capitalize +
+                       "Controller"
+  %>
+</p>
