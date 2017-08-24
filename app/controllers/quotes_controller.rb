@@ -12,18 +12,48 @@ class QuotesController < Rulers::Controller
     render :index, :quotes => quotes
   end
 
-  def quote_1
-    quote_1 = Rulers::Model::FileModel.find(1)
-    render :quote, :obj => quote_1
+  def show
+    quote = FileModel.find(params["id"])
+    ua = request.user_agent
+    render_response :quote, :obj => quote, :ua => ua
   end
 
-  def new_quote
-    attrs = {
-      "submitter" => "web user",
-      "quote" => "A picture is worth one k pixels",
-      "attribution" => "Me"
-    }
-    m = FileModel.create attrs
-    render :quote, :obj => m
+  def view_test
+    @noun = "roller skating"
+    render :view_test
+  end
+
+  # def quote_1
+  #   quote_1 = Rulers::Model::FileModel.find(1)
+  #   render :quote, :obj => quote_1
+  # end
+  #
+  # def new_quote
+  #   attrs = {
+  #     "submitter" => "web user",
+  #     "quote" => "A picture is worth one k pixels",
+  #     "attribution" => "Me"
+  #   }
+  #   obj = FileModel.create attrs
+  #   render :quote, :obj => obj
+  # end
+
+  # call with curl
+  # e.g. $ curl http://localhost:3001/quotes/update -d submitter=Frodo -d id=1
+  def update
+    # exception if not HTTP POST
+    raise "Only POST to this route!" unless env["REQUEST_METHOD"] == "POST"
+    body = env["rack.input"].read
+    astr = body.split("&")
+    params = {}
+    astr.each do |a|
+      name, val = a.split "="
+      params[name] = val
+    end
+    quote = FileModel.find(params["id"].to_i)
+    quote["submitter"] = params["submitter"]
+    quote.save
+
+    render :quote, :obj => quote
   end
 end
