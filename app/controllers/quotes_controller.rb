@@ -3,8 +3,9 @@ class QuotesController < Rulers::Controller
     render :a_quote, :noun => :winking
   end
 
-  def request_info
-    render :request_info
+  def quote_1
+    quote_1 = FileModel.find(1)
+    render :quote, :obj => quote_1
   end
 
   def index
@@ -18,25 +19,19 @@ class QuotesController < Rulers::Controller
     render_response :quote, :obj => quote, :ua => ua
   end
 
-  def view_test
-    @noun = "roller skating"
-    render :view_test
+  def new_quote
+    attrs = {
+      "submitter" => "web user",
+      "quote" => "A picture is worth one k pixels",
+      "attribution" => "Me"
+    }
+    obj = FileModel.create attrs
+    render :quote, :obj => obj
   end
 
-  # def quote_1
-  #   quote_1 = Rulers::Model::FileModel.find(1)
-  #   render :quote, :obj => quote_1
-  # end
-  #
-  # def new_quote
-  #   attrs = {
-  #     "submitter" => "web user",
-  #     "quote" => "A picture is worth one k pixels",
-  #     "attribution" => "Me"
-  #   }
-  #   obj = FileModel.create attrs
-  #   render :quote, :obj => obj
-  # end
+  def request_info
+    render :request_info
+  end
 
   # call with curl
   # e.g. $ curl http://localhost:3001/quotes/update -d submitter=Frodo -d id=1
